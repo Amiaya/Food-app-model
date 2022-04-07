@@ -7,5 +7,23 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.7",
     "nodemon": "^2.0.15"
-  }
+  },
+  "name": "food-delivery",
+  "version": "1.0.0",
+  "description": "food app",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amiaya/Food-app-model.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Amiaya/Food-app-model/issues"
+  },
+  "homepage": "https://github.com/Amiaya/Food-app-model#readme"
 }
