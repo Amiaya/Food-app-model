@@ -16,6 +16,9 @@
   "scripts": {
     "start": "node app.js"
   },
+  "engines": {
+    "node": "16.14.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Amiaya/Food-app-model.git"
