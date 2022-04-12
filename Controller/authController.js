@@ -1,14 +1,14 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const AppError = require('../utils/AppError')
+const catchAsync = require('../utils/catchAsync')
 
 const signToken = id => {
     return jwt.sign({id},process.env.JWT_SECRET,{
         expiresIn: process.env.JWT_EXPIRES_IN
     })
 }
-exports.signup = async (req,res,next) => {
-    try {
+exports.signup =catchAsync(async (req,res,next) => {
         const newUser = await User.create(req.body)
         const token = signToken(newUser._id)
         return res.status(400).json({
@@ -18,16 +18,9 @@ exports.signup = async (req,res,next) => {
                 user: newUser
             }
         })
-    } catch (err) {
-        return res.status(400).json({
-            status: "error",
-            message: err
-        })
-    }
-}
+})
 
-exports.login = async (req,res,next) => {
-    try {
+exports.login = catchAsync(async (req,res,next) => {
         const {email, password} = req.body
         if(!email || !password){
             return next( new AppError("Please provide an email or password", 400))
@@ -45,11 +38,4 @@ exports.login = async (req,res,next) => {
             status: 'success',
             token
         })
-        
-    } catch (err) {
-        res.status(400).json({
-            status: "error",
-            message: err
-        })
-    }
-}
+})

@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const orderRouter = require('./Routes/orderRouter')
 const userRouter = require('./Routes/userRouter')
 const errorController = require('./Controller/errorController')
+const AppError = require('./utils/AppError')
 
 const app = express()
 dotenv.config()
@@ -12,6 +13,9 @@ app.use(express.json())
 app.use('/api/v1/order', orderRouter)
 app.use('/api/v1/user', userRouter)
 
+app.all('*', (req,res,next) => {
+    next(new AppError(`Can't find ${req.originalUrl} on this server`,400))
+})
 app.use(errorController)
 
 const DB = process.env.DATABASE

@@ -1,8 +1,8 @@
 const Order = require('../models/order')
 const Review = require('../models/review')
+const catchAsync = require('../utils/catchAsync')
 
-exports.createOrder = async (req,res,next) => {
-    try {
+exports.createOrder = catchAsync(async (req,res,next) => {
         const newOrder = await Order.create(req.body)
         return res.status(201).json({
             status: 'successful',
@@ -10,16 +10,9 @@ exports.createOrder = async (req,res,next) => {
                 order: newOrder
             }
         })
-    } catch (err) {
-        return res.status(400).json({
-            status: "error",
-            message: err
-        })
-    }
-}
+})
 
-exports.getOrder = async (req,res,next)=> {
-    try {
+exports.getOrder = catchAsync(async (req,res,next)=> {
         const order = await Order.findById(req.params.id)
         return res.status(200).json({
             status: 'successful',
@@ -28,17 +21,9 @@ exports.getOrder = async (req,res,next)=> {
             }
         })
 
-    } catch (err) {
-        return res.status(400).json({
-            status: "error",
-            message: err
-        })
-    }
+})
 
-}
-
-exports.getAllOrder = async (req, res, next) =>{
-    try {
+exports.getAllOrder = catchAsync(async (req, res, next) =>{
         const orders = await Order.find()
         return res.status(200).json({
             status: 'successful',
@@ -46,18 +31,9 @@ exports.getAllOrder = async (req, res, next) =>{
                 orders
             }
         })
-    } catch (err) {
-        return res.status(400).json({
-            status: "error",
-            message: err
-        })
-    }
-    
+})
 
-}
-
-exports.review = async (req,res,next) => {
-    try {
+exports.review = catchAsync(async (req,res,next) => {
         const review = await Review.create(req.body)
         return res.status(200).json({
             status: 'successful',
@@ -65,11 +41,5 @@ exports.review = async (req,res,next) => {
                 review
             }
         })
-    } catch (err) {
-        return res.status(400).json({
-            status: "error",
-            message: err
-        })
-    }
     
-}
+})
