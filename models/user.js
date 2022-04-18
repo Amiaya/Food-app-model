@@ -16,12 +16,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A user must have a password'],
         minlength: 8,
+        select: false
     },
     phoneNo: {
         type: String,
         minlength: 10,
         maxlength: 10,
     }
+})
+
+userSchema.virtual('orders',{
+    ref:"Order",
+    foreignField:"user",
+    localField:"_id"
 })
 
 userSchema.pre('save', async function(next) {

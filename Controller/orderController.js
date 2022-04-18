@@ -3,6 +3,7 @@ const Review = require('../models/review')
 const catchAsync = require('../utils/catchAsync')
 
 exports.createOrder = catchAsync(async (req,res,next) => {
+    if(!req.body.user) req.body.user = req.params.userId
         const newOrder = await Order.create(req.body)
         return res.status(201).json({
             status: 'successful',

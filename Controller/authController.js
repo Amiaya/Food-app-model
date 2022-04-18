@@ -2,6 +2,7 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const AppError = require('../utils/AppError')
 const catchAsync = require('../utils/catchAsync')
+const {promisify} = require('util')
 
 const signToken = id => {
     return jwt.sign({id},process.env.JWT_SECRET,{
@@ -39,3 +40,4 @@ exports.login = catchAsync(async (req,res,next) => {
             token
         })
 })
+
