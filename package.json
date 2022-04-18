@@ -14,7 +14,8 @@
   "main": "app.js",
   "devDependencies": {},
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "start:prod": "set NODE_ENV=production&&nodemon server"
   },
   "engines": {
     "node": "16.14.0"
