@@ -10,9 +10,16 @@ const signToken = id => {
     })
 }
 exports.signup =catchAsync(async (req,res,next) => {
-        const newUser = await User.create(req.body)
+        const newUser = await User.create({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            phone: req.body.phoneNo
+        })
         const token = signToken(newUser._id)
-        return res.status(400).json({
+        newUser.password = undefined
+
+        res.status(200).json({
             status: "success",
             token,
             data: {
@@ -27,7 +34,7 @@ exports.login = catchAsync(async (req,res,next) => {
             return next( new AppError("Please provide an email or password", 400))
         }
 
-        const user = await User.findOne({email})
+        const user = await User.findOne({email}).select('+password')
      
 
         if(!user || !(await user.correctPassword(password, user.password))){
