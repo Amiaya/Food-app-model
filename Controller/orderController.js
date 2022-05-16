@@ -8,7 +8,17 @@ exports.createOrder = catchAsync(async (req,res,next) => {
     if(req.user._id != req.body.user){
         return next(new AppError('You cannot create an order for this user', 401))
     }
-        const newOrder = await Order.create(req.body)
+        let cost = 0
+        const {menu} = req.body
+        menu.forEach(foodItem => {
+            cost += foodItem.price * foodItem.quantity
+        });
+        const orderBody =  {
+            menu,
+            cost,
+            userId: req.params.userId
+        }
+        const newOrder = await Order.create(orderBody)
         return res.status(201).json({
             status: 'successful',
             data:{
@@ -19,7 +29,11 @@ exports.createOrder = catchAsync(async (req,res,next) => {
 
 exports.getOrder = catchAsync(async (req,res,next)=> {
         if(req.user._id.toString() === req.params.userId ){
-            const order = await Order.findById(req.params.id)
+            
+            const order = await Order.findOne({_id: req.params.id})
+            if (order === null){
+                return next( new AppError('This Order does not exist'))
+            }
             return res.status(200).json({
                 status: 'successful',
                 data:{
@@ -34,13 +48,18 @@ exports.getOrder = catchAsync(async (req,res,next)=> {
 })
 
 exports.getAllOrder = catchAsync(async (req, res, next) =>{
-        const orders = await Order.find()
+    if(req.user._id.toString() === req.params.userId ){
+        const orders = await Order.find({userId: req.params.userId})
         return res.status(200).json({
             status: 'successful',
             data:{
                 orders
             }
         })
+    }
+    else{
+        return next(new AppError('You do not have access to this user order ', 401))
+    }
 })
 
 exports.review = catchAsync(async (req,res,next) => {

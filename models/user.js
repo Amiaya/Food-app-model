@@ -18,12 +18,6 @@ const userSchema = new mongoose.Schema({
         minlength: 8,
         select: false
     },
-    order:[
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Order'
-        }
-    ],
     phoneNo: {
         type: String,
         minlength: 10,

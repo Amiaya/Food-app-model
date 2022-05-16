@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const orderRouter = require('./Routes/orderRouter')
 const userRouter = require('./Routes/userRouter')
+const foodRouter = require('./Routes/foodRouter')
 const errorController = require('./Controller/errorController')
 const AppError = require('./utils/AppError')
 
@@ -12,6 +13,7 @@ app.use(express.json())
 
 app.use('/api/v1/order', orderRouter)
 app.use('/api/v1/user', userRouter)
+app.use('/api/v1/food', foodRouter)
 
 app.all('*', (req,res,next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server`,400))
