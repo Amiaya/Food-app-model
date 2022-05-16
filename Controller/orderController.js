@@ -1,4 +1,5 @@
 const Order = require('../models/order')
+const Food = require('../models/food')
 const Review = require('../models/review')
 const AppError = require('../utils/AppError')
 const catchAsync = require('../utils/catchAsync')
@@ -10,11 +11,19 @@ exports.createOrder = catchAsync(async (req,res,next) => {
     }
         let cost = 0
         const {menu} = req.body
-        menu.forEach(foodItem => {
-            cost += foodItem.price * foodItem.quantity
+        let newMenuArr = []
+        menu.forEach(async (foodItem) => {
+            let newMenu = {}
+            const food = await Food.findById(foodItem.foodId)
+            cost += food.price * foodItem.quantity
+            newMenu.food=food.name,
+            newMenu.price = food.price
+            newMenu.quantity = foodItem.quantity
+            newMenuArr.push(newMenu)
+            newMenu = {}
         });
         const orderBody =  {
-            menu,
+            menu: newMenuArr,
             cost,
             userId: req.params.userId
         }
