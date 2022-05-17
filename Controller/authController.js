@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const AppError = require('../utils/AppError')
 const catchAsync = require('../utils/catchAsync')
 const {promisify} = require('util')
+const { resolveSoa } = require('dns')
 
 const signToken = id => {
     return jwt.sign({id},process.env.JWT_SECRET,{
@@ -26,6 +27,26 @@ exports.signup =catchAsync(async (req,res,next) => {
                 user: newUser
             }
         })
+})
+
+exports.adminSignup =catchAsync(async (req,res,next) => {
+    const newUser = await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        phone: req.body.phoneNo,
+        role: "admin"
+    })
+    const token = signToken(newUser._id)
+    newUser.password = undefined
+
+    res.status(200).json({
+        status: "success",
+        token,
+        data: {
+            user: newUser
+        }
+    })
 })
 
 exports.login = catchAsync(async (req,res,next) => {
@@ -75,3 +96,12 @@ exports.protect = catchAsync(async (req,res,next) => {
 
     next()
 })
+
+exports.restrictTo = (...role) => {
+    return (req, res, next) =>  {
+        if (!role.includes(req.user.role)){
+            return next (new AppError('You do not have permission to perform this action', 403))
+        }
+        next()
+    }
+}

@@ -5,6 +5,7 @@ const orderRouter = require('./orderRouter')
 const router = express.Router()
 
 router.post('/signup' , userController.signup)
+router.post('/signup/admin' , userController.adminSignup)
 router.post('/login' , userController.login)
 
 router.use('/:userId/orders', orderRouter)

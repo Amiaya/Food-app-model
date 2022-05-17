@@ -41,6 +41,16 @@ exports.createOrder = catchAsync(async (req,res,next) => {
         })
 })
 
+exports.Orders = catchAsync(async (req, res, next) =>{
+    const orders = await Order.find()
+    return res.status(200).json({
+        status: 'successful',
+        data:{
+            orders
+        }
+    })
+})
+
 exports.getOrder = catchAsync(async (req,res,next)=> {
         if(req.user._id.toString() === req.params.userId ){
             
@@ -56,7 +66,7 @@ exports.getOrder = catchAsync(async (req,res,next)=> {
             })
         }
         else{
-            return next(new AppError('You do not have access to this user order ', 401))
+            return next(new AppError('You do not have access to this user order', 401))
         }
        
 })
@@ -72,7 +82,7 @@ exports.getAllOrder = catchAsync(async (req, res, next) =>{
         })
     }
     else{
-        return next(new AppError('You do not have access to this user order ', 401))
+        return next(new AppError('You do not have access to this user order', 401))
     }
 })
 
@@ -86,3 +96,4 @@ exports.review = catchAsync(async (req,res,next) => {
         })
     
 })
+

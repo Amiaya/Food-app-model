@@ -23,3 +23,24 @@ exports.getAllFood = catchAsync(async (req, res, next) => {
         }
     })
 })
+
+exports.updateFood = catchAsync(async (req, res, next) => {
+    const food = await Food.findByIdAndUpdate(req.params.id,req.body, {
+        new: true,
+        runValidators: true
+    })
+    res.status(201).json({
+        status: 'successful',
+        data: {
+            food
+        }
+    })
+})
+
+exports.deleteFood = catchAsync(async (req, res, next) => {
+    const food = await Food.findByIdAndDelete(req.params.id)
+    res.status(204).json({
+        status: 'successful',
+        data: null
+    })
+})
