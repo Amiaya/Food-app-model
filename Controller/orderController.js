@@ -11,19 +11,24 @@ exports.createOrder = catchAsync(async (req,res,next) => {
     }
         let cost = 0
         const {menu} = req.body
-        let newMenuArr = []
-        menu.forEach(async (foodItem) => {
-            let newMenu = {}
-            const food = await Food.findById(foodItem.foodId)
-            cost += food.price * foodItem.quantity
-            newMenu.food=food.name,
-            newMenu.price = food.price
-            newMenu.quantity = foodItem.quantity
-            newMenuArr.push(newMenu)
-            newMenu = {}
+    
+        let foodIdArr = []
+        let foodQtyMap ={}
+        menu.forEach(item=>{
+            foodIdArr.push(item.foodId)
+            foodQtyMap[item.foodId] = item.quantity
+        })
+        const foodArr = await Food.find({_id:{$in:foodIdArr}})
+        foodArr.forEach( foodItem => {
+            cost += foodItem.price * foodQtyMap[foodItem._id]
+            foodItem.food= foodItem.food,
+            foodItem.price = foodItem.price
+            foodItem.quantity = foodItem.quantity
         });
+
+        
         const orderBody =  {
-            menu: newMenuArr,
+            menu: foodArr,
             cost,
             userId: req.params.userId
         }
