@@ -15,7 +15,7 @@ exports.createFood = catchAsync(async(req, res , next) => {
 
 exports.getAllFood = catchAsync(async (req, res, next) => {
     const foods = await Food.find()
-    res.status(201).json({
+    res.status(200).json({
         status: 'successful',
         result: foods.length,
         data: {
@@ -29,6 +29,9 @@ exports.updateFood = catchAsync(async (req, res, next) => {
         new: true,
         runValidators: true
     })
+    if (!food){
+        return next(new AppError("No document with this ID is found", 404))
+    }
     res.status(201).json({
         status: 'successful',
         data: {
@@ -39,6 +42,9 @@ exports.updateFood = catchAsync(async (req, res, next) => {
 
 exports.deleteFood = catchAsync(async (req, res, next) => {
     const food = await Food.findByIdAndDelete(req.params.id)
+    if (!food){
+        return next(new AppError("No document with this ID is found", 404))
+    }
     res.status(204).json({
         status: 'successful',
         data: null
