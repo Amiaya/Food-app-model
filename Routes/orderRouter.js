@@ -15,7 +15,7 @@ router.post('/review', orderController.review)
 
 router.route('/AllUserOrders').get(userController.protect,orderController.GetUserStats)
 
-router.route('/topOrders/:price').get(userController.protect,orderController.TopOrder)
+router.route('/topOrders/:food').get(userController.protect,orderController.SearchFood)
 
 
 

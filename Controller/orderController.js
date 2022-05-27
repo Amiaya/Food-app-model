@@ -55,7 +55,7 @@ exports.Orders = catchAsync(async (req, res, next) =>{
 exports.getOrder = catchAsync(async (req,res,next)=> {
         if(req.user._id.toString() === req.params.userId ){
             
-            const order = await Order.findOne({_id: req.params.id})
+            const order = await Order.findOne({_id: req.params.id, userId: req.user._id.toString()})
             if (order === null){
                 return next( new AppError('This Order does not exist', 404))
             }
@@ -125,15 +125,12 @@ exports.GetUserStats = catchAsync(async(req, res, next) => {
     
 })
 
-exports.TopOrder = catchAsync(async(req,res, next) => {
+exports.SearchFood = catchAsync(async(req,res, next) => {
     if(req.user._id.toString() === req.params.userId ){
-        var num = parseInt(req.params.price)
 
-        const FoodStats = await Order.aggregate([ 
-        {
-                $match: {
-                    cost: {$gte:  num}
-                }
+        const searchFood = await Order.aggregate([ 
+            {
+                    $match: {'menu.food': req.params.food, userId: mongoose.Types.ObjectId(req.params.userId)}
             },
             {
                 $project:{
@@ -148,9 +145,12 @@ exports.TopOrder = catchAsync(async(req,res, next) => {
                 }
             },
         ])
+        if (searchFood.length === 0){
+            return next( new AppError('This Order does not exist', 404))
+        }
         return res.status(200).json({
             status: 'successful',
-            FoodStats
+            searchFood
         })
     }
     else{
